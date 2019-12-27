@@ -1,19 +1,17 @@
-package com.qf.shop_goods;
+package com.qf.shop_back;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = "com.qf")
 @EnableEurekaClient
-@MapperScan("com.qf.dao")
-@EnableTransactionManagement
-public class ShopGoodsApplication {
+@EnableFeignClients(basePackages = "com.qf.feign")
+public class ShopBackApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ShopGoodsApplication.class, args);
+        SpringApplication.run(ShopBackApplication.class, args);
     }
 
 }
