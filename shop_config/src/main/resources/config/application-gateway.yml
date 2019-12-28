@@ -3,3 +3,13 @@ server:
 spring:
   application:
     name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: back
+          uri: lb://MIRCROSERVICE-BACK
+          predicates:
+            - Path=/back/**
+          filters:
+            - StripPrefix=1
+
