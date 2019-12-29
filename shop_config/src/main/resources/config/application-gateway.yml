@@ -7,7 +7,7 @@ spring:
     gateway:
       routes:
         - id: back
-          uri: lb://MIRCROSERVICE-BACK
+          uri: lb://MICSERVICE-BACK
           predicates:
             - Path=/back/**
           filters:
