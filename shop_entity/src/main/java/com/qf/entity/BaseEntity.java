@@ -14,7 +14,7 @@ public class BaseEntity implements Serializable {
 
     @TableId(type = IdType.AUTO)
     protected Integer id;
-    protected Date creatTime = new Date();
+    protected Date createTime = new Date();
     protected Integer status = 0;
 
 }

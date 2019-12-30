@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <base th:href="${#request.getContextPath() + '/'}"/>
+    <base th:href="${#request.getContextPath() + '/back/'}"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Insert title here</title>
     <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
           media="screen" />
 
+    <style>
+        .kill{
+            display: none;
+        }
+    </style>
     <!--                       Javascripts                       -->
     <!-- jQuery -->
     <script type="text/javascript"
@@ -24,6 +29,8 @@
     <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
     <script src="resources/widget/webuploader/webuploader.min.js"></script>
     <link rel="stylesheet" href="resources/widget/webuploader/webuploader.css"/>
+                <!--日期控件-->
+    <script src="/back/resources/widget/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 <div id="main-content">
@@ -47,8 +54,8 @@
                     <tr th:each="goods : ${goodsList}">
                         <td><input type="checkbox" /></td>
                         <td th:text="${goods.id}">Lorem ipsum dolor</td>
-                        <td th:text="${goods.subject}">Lorem ipsum dolor</td>
-                        <td><img style="width: 120px; height: 90px" th:src="${goods.fmurl}"/></td>
+                        <td th:text="|${goods.subject}(${goods.type == 1 ? '普通商品' : '秒杀商品'})|">Lorem ipsum dolor</td>
+                        <td><img style="width: 120px; height: 90px" th:src="|goods/showimg?imgPath=${goods.fmUrl}|"/></td>
                         <td th:text="${#numbers.formatCurrency(goods.price)}">Lorem ipsum dolor</td>
                         <td th:text="${goods.save}">Consectetur adipiscing</td>
                         <td>
@@ -91,6 +98,7 @@
 <script>
 
     $(function () {
+
         // 初始化Web Uploader
         var uploader = WebUploader.create({
             // 选完文件后，是否自动上传。
@@ -98,15 +106,16 @@
             // swf文件路径
             swf: "/resources/widget/webuploader/Uploader.swf",
             // 文件接收服务端。
-            server: '/goods/uploader',
+            server: 'goods/uploader',
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.
             pick: '#fm_uploader'
         });
         uploader.on('uploadSuccess', function(file, response){
+
             if(response.code == "200"){
                 //设置图片回显
-                $("#fm_img").attr("src",response.data);
+                $("#fm_img").attr("src","goods/showimg?imgPath="+response.data);
                 $("#fmurl").val(response.data);
             } else {
                 alert("图片上传失败！");
@@ -122,20 +131,21 @@
             // swf文件路径
             swf: "/resources/widget/webuploader/Uploader.swf",
             // 文件接收服务端。
-            server: '/goods/uploader',
+            server: 'goods/uploader',
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.
             pick: '#other_uploader'
         });
         uploader.on('uploadSuccess', function(file, response){
 
+
             if(response.code == "200"){
                 //设置图片回显
-                var htmlimg="<img style='width: 120px; height: 120px; margin: 10px' src='"+ response.data + "'/>";
+                var htmlimg="<img style='width: 120px; height: 120px; margin: 10px' src='goods/showimg?imgPath="+ response.data + "'/>";
 
                 $("#imgdiv").append(htmlimg);
 
-                var htmlhidden = "<input type='hidden' name='otherurls' value='" + response.data + "'/>";
+                var htmlhidden = "<input type='hidden' name='otherUrl' value='" + response.data + "'/>";
                 $("#imgurl").append(htmlhidden);
             } else {
                 alert("图片上传失败！");
@@ -154,12 +164,19 @@
         });
 
     }
+    function switchType(type) {
+        if(type == 2){
+            $(".kill").show();
+        }else {
+            $(".kill").hide();
+        }
+    }
 </script>
 <div id="MyDialog" style="display: none">
     <div class="content-box-content">
         <div class="tab-content default-tab" id="tab2">
-            <form action="/goods/insert" method="post">
-                <fieldset>
+            <form action="goods/insert" method="post">
+                    <fieldset>
                     <!-- Set class to "column-left" or "column-right" on fieldsets to divide the form into columns -->
                     <!--<p>
                         <label>Small form input</label> <input
@@ -170,17 +187,33 @@
                         &lt;!&ndash; Classes for input-notification: success, error, information, attention &ndash;&gt;
                         <br /> <small>A small description of the field</small>
                     </p>-->
+                        <p>
+                            <label>商品类型</label>
+                            <input type="radio" name="type" value="1" checked onclick="switchType(1);"/>普通商品
+                            <input type="radio" name="type" value="2" onclick="switchType(2);"/>秒杀商品
+                        </p>
                     <p>
                         <label>商品标题</label>
                         <input
                                 class="text-input medium-input datepicker" type="text"
                                 name="subject" />
-                    </p>
-                    <p>
+                        <p class="kill">
+                            <label style="color: red">*秒杀开始时间</label>
+                            <input
+                                    class="text-input medium-input datepicker" type="text"
+                                    name="startTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss', minDate:'%y-%M-%d {%H+1}:00:00'})"/>
+                        </p>
+
+                        <p class="kill">
+                            <label style="color: red">*秒杀结束时间</label>
+                            <input
+                                    class="text-input medium-input datepicker" type="text"
+                                    name="endTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss', minDate:'%y-%M-%d {%H+2}:00:00'})"/>
+                        </p>
                         <label>上传封面</label>
                         <img
                                 id="fm_img" style="width: 120px; height: 120px"/>
-                        <input type="hidden" id="fmurl" name="fmurl"/>
+                        <input type="hidden" id="fmurl" name="fmUrl"/>
 
                     <div id="fm_uploader">上传封面</div>
                     </p>
@@ -193,11 +226,17 @@
                     </div>
                     </p>
                     <p>
-                        <label>商品价格</label>
+                        <label >商品价格</label>
                         <input
                                 class="text-input medium-input datepicker" type="text"
                                 name="price" />
                     </p>
+                        <p class="kill">
+                            <label style="color: red">*秒杀价格</label>
+                            <input
+                                    class="text-input medium-input datepicker" type="text"
+                                    name="killPrice" />
+                        </p>
                     <p>
                         <label>商品库存</label>
                         <input
