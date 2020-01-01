@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -31,10 +32,24 @@ public class GoodsController {
     }
 
 
+    /**
+     * 查询商品信息
+     * @return
+     */
     @RequestMapping("/list")
     public List<Goods> goodsList(){
 
         return goodsService.goodsList();
+    }
+
+
+    /**
+     * 查询秒杀商品信息
+     * @return
+     */
+    public List<Goods> queryKillList(@RequestBody Date time){
+
+        return goodsService.queryKillList(time);
     }
 
 }

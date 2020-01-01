@@ -2,6 +2,7 @@ package com.qf.service;
 
 import com.qf.entity.Goods;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IGoodsService {
@@ -11,4 +12,6 @@ public interface IGoodsService {
 
     //查询商品
     List<Goods> goodsList();
+
+    List<Goods> queryKillList(Date time);
 }

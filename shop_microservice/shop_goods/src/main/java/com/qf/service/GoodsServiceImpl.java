@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -98,6 +101,44 @@ public class GoodsServiceImpl implements IGoodsService{
 
         }
 
+
+        return goodsList;
+    }
+
+
+    /**
+     * 查询秒杀商品
+     * @param time
+     * @return
+     */
+    @Override
+    public List<Goods> queryKillList(Date time) {
+
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("start_time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time));
+        List<GoodsSeckill> killList = goodsSeckillMapper.selectList(queryWrapper);
+        List<Goods> goodsList = new ArrayList<>();
+
+        for (GoodsSeckill goodsSeckill : killList) {
+            Goods goods = goodsMapper.selectById(goodsSeckill.getGid());
+            goods.setGoodsSeckill(goodsSeckill);
+
+            //查询相关图片
+            QueryWrapper queryWrapper2 = new QueryWrapper();
+            queryWrapper2.eq("gid", goods.getId());
+            List<GoodsImages> images = goodsImagesMapper.selectList(queryWrapper2);
+
+            for (GoodsImages image : images) {
+                if(image.getIsfengmian() == 1){
+                    //是封面
+                    goods.setFmUrl(image.getUrl());
+                } else {
+                    //非封面
+                    goods.addOtherUrl(image.getUrl());
+                }
+            }
+            goodsList.add(goods);
+        }
 
         return goodsList;
     }
