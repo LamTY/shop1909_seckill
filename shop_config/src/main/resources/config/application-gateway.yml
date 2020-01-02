@@ -12,4 +12,8 @@ spring:
             - Path=/back/**
           filters:
             - StripPrefix=1
+        - id: front
+          uri: lb://MICSERVICE-FRONT
+          predicates:
+            - Path=/**
 
