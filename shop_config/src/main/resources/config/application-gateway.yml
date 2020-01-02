@@ -12,6 +12,17 @@ spring:
             - Path=/back/**
           filters:
             - StripPrefix=1
+          #秒杀服务的路由规则
+        - id: kill
+          uri: lb://MICSERVICE-KILL
+          predicates:
+            - Path=/kill/**,/html/**
+        #静态资源服务的路由规则
+        - id: resources
+          uri: lb://MICSERVICE-RESOURCES
+          predicates:
+            - Path=/**/*.js,/**/*.css,/**/*.png,/**/*.jpg,/**/*.gif,/**/*.jepg
+       #首页服务的路由规则
         - id: front
           uri: lb://MICSERVICE-FRONT
           predicates:

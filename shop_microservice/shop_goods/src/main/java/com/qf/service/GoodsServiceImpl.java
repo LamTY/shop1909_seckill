@@ -7,6 +7,7 @@ import com.qf.dao.GoodsSeckillMapper;
 import com.qf.entity.Goods;
 import com.qf.entity.GoodsImages;
 import com.qf.entity.GoodsSeckill;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,8 @@ public class GoodsServiceImpl implements IGoodsService{
     @Autowired
     private GoodsSeckillMapper goodsSeckillMapper;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     //添加商品
     @Override
@@ -64,8 +67,11 @@ public class GoodsServiceImpl implements IGoodsService{
         }
 
 
+        // 将商品信息放入rabbitmq， 同步到索引库中,以及生成静态页面
 
-        return 0;
+        rabbitTemplate.convertAndSend("goods_exchange","",goods);
+
+        return 1;
     }
 
     //查询商品
