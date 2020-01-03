@@ -9,6 +9,9 @@ import com.qf.entity.GoodsImages;
 import com.qf.entity.GoodsSeckill;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "goods")
 public class GoodsServiceImpl implements IGoodsService{
 
     @Autowired
@@ -35,8 +39,10 @@ public class GoodsServiceImpl implements IGoodsService{
     //添加商品
     @Override
     @Transactional
+    @CacheEvict(key = "'kill_' + #goods.goodsSeckill.startTime.time", condition = "#goods.type == 2")
     public int insertGoods(Goods goods) {
 
+        System.out.println("good-service的添加商品");
         //添加商品
         goodsMapper.insert(goods);
 
@@ -118,6 +124,7 @@ public class GoodsServiceImpl implements IGoodsService{
      * @return
      */
     @Override
+    @Cacheable(key = "'kill_' + #time.time")
     public List<Goods> queryKillList(Date time) {
 
         QueryWrapper queryWrapper = new QueryWrapper();

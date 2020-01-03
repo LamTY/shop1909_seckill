@@ -579,7 +579,7 @@
                 </li>
                 <li>
                     <label>秒杀价：</label>
-                    <span><strong>${goods.goodsKill.killPrice?string("￥#,###.##")}</strong>元</span>
+                    <span><strong>${goods.goodsSeckill.killPrice?string("￥#,###.##")}</strong>元</span>
                 </li>
                 <li>
                     <label>原价：</label>
@@ -587,7 +587,7 @@
                 </li>
                 <li>
                     <label>当前库存：</label>
-                    <span>${goods.goodsKill.killSave}件</span>
+                    <span>${goods.goodsSeckill.killSave}件</span>
                 </li>
                 <li>
                     <label>评价：</label>

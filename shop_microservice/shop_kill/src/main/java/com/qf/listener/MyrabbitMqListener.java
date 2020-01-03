@@ -33,13 +33,12 @@ public class MyrabbitMqListener {
         }
 
         file = new File(file, goods.getId() + ".html");
-        try (
-                Writer out = new FileWriter("G:\\imgs")
-                ){
-            Template template = configuration.getTemplate("kill.ftlh");
-            Map<String, Object> map = new HashMap<>();
-            map.put("goods", goods);
-
+            try (
+                    Writer out = new FileWriter(file)
+            ){
+                Template template = configuration.getTemplate("kill.ftlh");
+                Map<String, Object> map = new HashMap<>();
+                map.put("goods", goods);
             //生成静态页
             template.process(map, out);
         } catch (Exception e) {

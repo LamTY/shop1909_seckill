@@ -17,7 +17,7 @@ public class RabbitmqConfig {
 
     @Bean
     public Queue getQueue(){
-        return new Queue("kill_name");
+        return new Queue("kill_queue");
     }
 
     @Bean
