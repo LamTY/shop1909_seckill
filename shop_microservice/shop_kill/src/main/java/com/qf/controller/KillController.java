@@ -5,14 +5,15 @@ import com.qf.entity.ResultData;
 import com.qf.feign.GoodsFeign;
 import com.qf.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/kill")
 public class KillController {
 
@@ -23,6 +24,7 @@ public class KillController {
      *     查询秒杀场次
      */
     @RequestMapping("/queryKillTimes")
+    @ResponseBody
     public ResultData<List<Date>> queryKillTimes(){
 
         List<Date> dates = new ArrayList<>();
@@ -47,6 +49,7 @@ public class KillController {
      * @return
      */
     @RequestMapping("/queryKillList")
+    @ResponseBody
     public ResultData<List<Goods>> queryKillList(Integer n){
 
         Date time = DateUtil.getNextNDate(n);
@@ -57,4 +60,13 @@ public class KillController {
                 .setData(goodsList);
     }
 
+    /**
+     * 获取当前时间
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/queryNow")
+    public ResultData<Date> queryNow(){
+        return new ResultData<Date>().setCode(ResultData.ResultCodeList.OK).setData(new Date());
+    }
 }

@@ -616,93 +616,68 @@
     <!-- 商品展示 End -->
 
     <script type="text/javascript">
-
         //商品开始抢购的时间
-        var startTime = new Date('${goods.goodsKill.startTime?datetime}');
+        var startTime = new Date('${goods.goodsSeckill.startTime?datetime}');
 
         //当前时间
         var now;
 
-        //计数器
         var count = 0;
-
-        /**
-         * 倒计时功能
-         */
-        function djs(){
-            //计算时间差
-            var times = startTime.getTime() - now.getTime();
-
-            if(times <= 0){
-                //秒杀已经开始了
-                alert("秒杀开始了！");
-                return;
-            }
-
-            //秒杀还未开始，计算倒计时
-            var h = parseInt(times/1000/60/60);//还剩多少小时
-            var m = parseInt(times/1000/60%60);//还剩多少分钟
-            var s = parseInt(times/1000%60);//还剩多少秒
-            var ms = parseInt(times%1000);//还剩多少毫秒 867
-
-
-            var djsTime = formatTime(h) + ":" + formatTime(m) + ":" + formatTime(s);
-            $("#djs").html(djsTime);
-
-            setTimeout(function(){
-
-                if(count >= 60){
-                    console.log("主动获取服务器的时间！");
-                    //重新获取服务器的时间
-                    getServerNow();
-                    count = 0;
-                } else {
-                    now.setSeconds(now.getSeconds() + 1);
-                    now.setMilliseconds(now.getMilliseconds() + ms);
-                    count++;
-                }
-
-                djs();
-
-            }, 1000 + ms);
-        }
-
-        /**
-         * 获得服务器的当前时间
-         */
-        function getServerNow(){
+        
+        function getNowDate() {
             $.ajax({
-                type: "GET",
                 url: "/kill/queryNow",
-                async: false,//设置为同步的ajax
-                success: function(data){
+                type: "GET",
+                async: false,
+                success: function (data) {
                     if(data.code == "200"){
                         now = new Date(data.data);
                     }
                 }
-            });
+            })
         }
 
-        /**
-         * 格式化当前时间
-         */
+        function countDown() {
+            var time = startTime.getTime() - now.getTime();
+            if(time <= 0){
+                alert("秒杀已开始")
+                return;
+            }
+            var h = parseInt(times/1000/60/60);//还剩多少小时
+            var m = parseInt(times/1000/60%60);//还剩多少分钟
+            var s = parseInt(times/1000%60);//还剩多少秒
+            var ms = parseInt(times%1000);//还剩多少毫秒
+
+            var timeout = formatTime(h) + ":" + formatTime(m) + ":" + formatTime(s);
+            $("#djs").html(timeout);
+
+            setTimeout(function () {
+                if(count == 60){
+                    getNowDate();
+                    count = 0;
+                }else {
+                    now.setSeconds(now.getSeconds() + 1);
+                    now.setMilliseconds(now.getMilliseconds() + ms)
+                    count++;
+                }
+
+                countDown();
+            }, 1000 + ms)
+        }
+
         function formatTime(n){
             if(n < 10){
-                return "0" + n;
+               return "0" + n;
             }
             return n;
         }
 
-        /**
-         * 页面加载后触发
-         */
-        $(function(){
-            //获取当前时间
-            getServerNow();
+        $(function () {
+            getNowDate();
 
-            //开始倒计时
-            djs();
-        });
+            countDown();
+        })
+
     </script>
 
 
