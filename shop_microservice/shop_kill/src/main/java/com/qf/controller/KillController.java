@@ -9,9 +9,11 @@ import com.qf.feign.GoodsFeign;
 import com.qf.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,16 +75,25 @@ public class KillController {
         return new ResultData<Date>().setCode(ResultData.ResultCodeList.OK).setData(new Date());
     }
 
+
     /**
      * 秒杀商品抢购
      */
     @RequestMapping("/buyNow")
     @IsLogin(mustLogin = true)
-    public String buyNow(Integer gid){
+    public String buyNow(Integer gid, Integer gnumber, Model model){
 
         User user = LoginStatus.getUser();
 
-
         return "success";
+    }
+
+    /**
+     * 验证码
+     */
+    @RequestMapping("/code")
+    public void code(HttpServletResponse response){
+
+
     }
 }

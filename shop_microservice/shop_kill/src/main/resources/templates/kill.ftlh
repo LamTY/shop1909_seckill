@@ -641,6 +641,13 @@
 
         function toBuy() {
             $("#buyNow").click(function () {
+                $("#code_dialog").dialog({
+                    title:"请输入验证码",
+                    width: 200,
+                    height: 160,
+                    modal: true
+                });
+            }
                 location.href = "/kill/buyNow?gid=${goods.id}"
 
             })
@@ -708,6 +715,12 @@
 
     </script>
 
+    <!-- 验证码的弹框 -->
+    <div id="code_dialog" style="display: none;">
+        验证码:<input id="mycode" name="code" style="width: 60px"/>
+        <img src="/kill/code" onclick="update_code(this);"/> <br/><br/>
+        <button type="button" onclick="xiadan();">立即抢购</button>
+    </div>
 
     <div class="clear mt15"></div>
     <!-- Goods Left -->
