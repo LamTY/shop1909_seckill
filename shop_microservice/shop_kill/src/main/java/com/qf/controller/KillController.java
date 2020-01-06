@@ -1,7 +1,10 @@
 package com.qf.controller;
 
+import com.qf.aop.IsLogin;
+import com.qf.aop.LoginStatus;
 import com.qf.entity.Goods;
 import com.qf.entity.ResultData;
+import com.qf.entity.User;
 import com.qf.feign.GoodsFeign;
 import com.qf.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +71,18 @@ public class KillController {
     @RequestMapping("/queryNow")
     public ResultData<Date> queryNow(){
         return new ResultData<Date>().setCode(ResultData.ResultCodeList.OK).setData(new Date());
+    }
+
+    /**
+     * 秒杀商品抢购
+     */
+    @RequestMapping("/buyNow")
+    @IsLogin(mustLogin = true)
+    public String buyNow(Integer gid){
+
+        User user = LoginStatus.getUser();
+
+
+        return "success";
     }
 }

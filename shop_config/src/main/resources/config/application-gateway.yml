@@ -17,6 +17,11 @@ spring:
           uri: lb://MICSERVICE-KILL
           predicates:
             - Path=/kill/**,/html/**
+        #用户服务的路由规则
+        - id: sso
+          uri: lb://MICSERVICE-SSO
+          predicates:
+            - Path=/sso/**
         #静态资源服务的路由规则
         - id: resources
           uri: lb://MICSERVICE-RESOURCES

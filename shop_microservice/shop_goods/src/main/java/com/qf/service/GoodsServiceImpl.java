@@ -7,11 +7,13 @@ import com.qf.dao.GoodsSeckillMapper;
 import com.qf.entity.Goods;
 import com.qf.entity.GoodsImages;
 import com.qf.entity.GoodsSeckill;
+import com.qf.util.DateUtil;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,9 @@ public class GoodsServiceImpl implements IGoodsService{
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     //添加商品
     @Override
@@ -70,6 +75,10 @@ public class GoodsServiceImpl implements IGoodsService{
             GoodsSeckill goodsSeckill = goods.getGoodsSeckill();
             goodsSeckill.setGid(goods.getId());
             goodsSeckillMapper.insert(goodsSeckill);
+
+            //将秒杀商品id放入redis集合中
+            String timeSuffix = DateUtil.get2Date(goodsSeckill.getStartTime(), "yyMMddHH");
+            stringRedisTemplate.opsForSet().add("killgoods_" + timeSuffix, goods.getId() + "");
         }
 
 

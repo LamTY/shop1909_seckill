@@ -607,7 +607,7 @@
                         <strong style="color: red">倒计时：<span id="djs">00:00:00</span></strong>
                     </span>
                     <span>
-                        <a href="" class="goods_sub goods_sub_gou" >加入购物车</a>
+                       <button id = "buyNow" disabled = "disabled">即将开始</button>
                     </span>
                 </li>
             </ul>
@@ -623,7 +623,9 @@
         var now;
 
         var count = 0;
-        
+
+        var mytime;
+
         function getNowDate() {
             $.ajax({
                 url: "/kill/queryNow",
@@ -637,6 +639,18 @@
             })
         }
 
+        function toBuy() {
+            $("#buyNow").click(function () {
+                location.href = "/kill/buyNow?gid=${goods.id}"
+
+            })
+            $("#buyNow").removeAttr("disabled")
+            $("#buyNow").html("立即抢购")
+
+        }
+        
+
+        
         function countDown() {
             var time = startTime.getTime() - now.getTime();
             if(time <= 0){
@@ -651,7 +665,7 @@
             var timeout = formatTime(h) + ":" + formatTime(m) + ":" + formatTime(s);
             $("#djs").html(timeout);
 
-            setTimeout(function () {
+            mytime = setTimeout(function () {
                 if(count == 60){
                     getNowDate();
                     count = 0;
@@ -677,6 +691,20 @@
 
             countDown();
         })
+
+        document.addEventListener('visibilitychange',function(){ //浏览器切换事件
+            if(document.visibilityState=='hidden') { //状态判断
+                //console.log("隐藏了！！");
+
+                //停止定时器
+                clearTimeout(mytime);
+            }else {
+                //console.log("可见了！！");
+                //获取当前时间
+                getNowDate();
+                //开始倒计时
+                countDown();
+            }
 
     </script>
 
