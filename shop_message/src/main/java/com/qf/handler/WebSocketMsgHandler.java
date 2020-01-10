@@ -12,16 +12,16 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelRegistered(ctx);
+        System.out.println("有一个客户端连接！");
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelUnregistered(ctx);
+        System.out.println("有一个客户端断开连接！");
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame textWebSocketFrame) throws Exception {
 
     }
 }

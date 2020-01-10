@@ -35,7 +35,7 @@ public class ServerStartListener implements CommandLineRunner {
                         ChannelPipeline pipeline = channel.pipeline();
                         pipeline.addLast(new HttpServerCodec());
                         pipeline.addLast(new HttpObjectAggregator(1024 * 1024));
-                        pipeline.addLast(new WebSocketServerProtocolHandler("/"));
+                        pipeline.addLast(new WebSocketServerProtocolHandler("/msg"));
 
                         pipeline.addLast(webSocketMsgHandler);
                     }
