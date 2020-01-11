@@ -63,10 +63,26 @@
 
                     ws.onmessage = function (msg) {
                         console.log("接收到服务器消息" + msg.data)
+                        var msgobj = JSON.parse(msg.data)
+                        if(msgobj.type == 2){
+                            clearTimeout(closeTimeout);
+                            closeConn();
+                        }
                     }
                 }
             }
 
+            /**
+             * 关闭连接
+             */
+            var closeTimeout = null;
+            function closeConn() {
+                closeTimeout = setTimeout(function () {
+                    if (ws){
+                        ws.close;
+                    }
+                }, 5000)
+            }
             /**
              * 重连机制
              */

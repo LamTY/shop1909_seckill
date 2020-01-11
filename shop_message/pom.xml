@@ -40,6 +40,16 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.44.Final</version>
         </dependency>
+        <dependency>
+            <groupId>com.qf</groupId>
+            <artifactId>shop_entity</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.61</version>
+        </dependency>
     </dependencies>
 
     <build>
