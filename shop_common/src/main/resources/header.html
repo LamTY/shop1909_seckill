@@ -6,6 +6,7 @@
 </head>
 <body>
     <div th:fragment="myheader">
+        <script src="js/websocket.js"></script>
         <script>
             $(function () {
                 $.ajax({
@@ -14,6 +15,18 @@
                         if(data.code == "200"){
                             //已经登录
                             $("#pid").html(data.data.nickname + "您好，欢迎来到<b>ShopCZ商城</b>  <a href='http://localhost:8890/sso/logout'>注销</a>");
+                            initWs({
+                                url : "ws://127.0.0.1:59478/msg",
+                                //自定义方法
+                                myopen:function () {
+
+                                },
+                                mymessage:function (msgobj) {
+
+                                }
+                                
+                            })
+
                         } else {
                             $("#pid").html("" +
                                 "[<a onclick='login()'>登录</a>]" +
@@ -31,100 +44,7 @@
                 window.location="http://localhost:8890/sso/toLogin?returnUrl="+returnUrl;
             }
 
-            /**
-             * 初始化websocket
-             */
-            var ws;
-            function initWs() {
-                if(window.WebSocket){
-                    ws = new WebSocket("ws://127.0.0.1:59478/msg")
 
-                    //设置回调
-                    ws.onopen = function () {
-                        console.log("服务器连接成功")
-                        heartBeat()
-                    }
-
-                    ws.onclose = function () {
-                        console.log("服务器连接断开")
-                        if(heartTimeout){
-                            clearTimeout(heartTimeout);
-                            heartTimeout = null;
-                        }
-                        setTimeout(function () {
-                            reconn();
-                        }, 5000)
-
-                    }
-
-                    ws.onerror = function () {
-                        console.log("服务器连接异常")
-                    }
-
-                    ws.onmessage = function (msg) {
-                        console.log("接收到服务器消息" + msg.data)
-                        var msgobj = JSON.parse(msg.data)
-                        if(msgobj.type == 2){
-                            clearTimeout(closeTimeout);
-                            closeConn();
-                        }
-                    }
-                }
-            }
-
-            /**
-             * 关闭连接
-             */
-            var closeTimeout = null;
-            function closeConn() {
-                closeTimeout = setTimeout(function () {
-                    if (ws){
-                        ws.close;
-                    }
-                }, 5000)
-            }
-            /**
-             * 重连机制
-             */
-            function reconn() {
-                initWs()
-            }
-
-            /**
-             * 心跳机制
-             */
-            var heartTimeout;
-            function heartBeat() {
-                /编辑心跳信息
-                var msg = {"type":2};
-                console.log("触发了一次心跳机制")
-                sendObjectMsg(msg);
-                //发送消息
-                heartTimeout = setTimeout(function () {
-                    heartBeat();
-                }, 2000)
-            }
-
-            /**
-             * 发送心跳信息为字符串
-             */
-            function sendMsg(msg) {
-
-                if (ws){
-                    ws.send(msg);
-                }else {
-                    alert("发送失败")
-                }
-
-            }
-
-            /**
-             * 发送心跳信息为对象
-             */
-            function sendObjectMsg(msg) {
-                var msgStr = JSON.stringify(msg);
-                sendMsg(msgStr)
-            }
         </script>
         <!-- Header TopNav Left -->
         <div class="shop_hd_topNav_all_left">

@@ -48,7 +48,7 @@ public class ServerStartListener implements CommandLineRunner {
                         pipeline.addLast(new HttpObjectAggregator(1024 * 1024));
 
                         pipeline.addLast(new WebSocketServerProtocolHandler("/msg"));
-                        pipeline.addLast(new ReadTimeoutHandler(5, TimeUnit.SECONDS));
+                        pipeline.addLast(new ReadTimeoutHandler(5, TimeUnit.MINUTES));
                         pipeline.addLast(webSocketOutHandler);
                         pipeline.addLast(webSocketMsgHandler);
                         pipeline.addLast(webSocketHeartHandler);

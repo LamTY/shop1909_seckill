@@ -604,6 +604,9 @@
                 <li style="padding:20px 0;">
                     <label>&nbsp;</label>
                     <span>
+                        <button id = "remindBtn" onclick="remind()" alt = "0">提醒我</button>
+                    </span>
+                    <span>
                         <strong style="color: red">倒计时：<span id="djs">00:00:00</span></strong>
                     </span>
                     <span>
@@ -616,6 +619,17 @@
     <!-- 商品展示 End -->
 
     <script type="text/javascript">
+        /**
+         * 抢购提醒
+         */
+
+        function remind() {
+            var flag = $("#remindBtn").attr("alt")
+
+
+        }
+
+
         //商品开始抢购的时间
         var startTime = new Date('${goods.goodsSeckill.startTime?datetime}');
 
